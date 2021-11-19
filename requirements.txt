@@ -1,0 +1,4 @@
+flask
+pudb
+pytest
+python-dotenv
