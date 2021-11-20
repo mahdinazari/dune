@@ -1,13 +1,23 @@
+### dune
+This is a `flask` test application.
+
+#### Install requirements
+```
+pip install -r requirements.txt
+```
+
+#### Runt tests
+```
+make test
+```
+
 #### TODO
 - JWT
 - Authorization
 - Request validation using model
-- Unit Test
-- Requirements inheritance
 - Dockerize
 - docker-compose
 - Celery (rabitMQ or kafka)
-- .env
 - before after request
 - manage.py
 - Cors

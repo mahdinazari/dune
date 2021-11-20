@@ -1,4 +1,5 @@
 flask
-pudb
 pytest
 python-dotenv
+
+-r requirements_dev.txt
