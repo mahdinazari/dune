@@ -27,4 +27,5 @@ make test
 
 #### Features
 - Unit Test
-
+- Schema validation
+- Custom Exception Handler

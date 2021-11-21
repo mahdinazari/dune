@@ -1,5 +1,3 @@
 flask
-pytest
 python-dotenv
-
--r requirements_dev.txt
+marshmallow==3.8.0

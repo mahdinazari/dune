@@ -1,1 +1,6 @@
+ipython
+pytest-pudb
 pudb
+pytest
+
+-r requirements.txt
