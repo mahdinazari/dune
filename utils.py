@@ -1,31 +1,43 @@
 import re
 
-from serializers.member import MemberSerializer
+from serializers.member import MemberSerializer, LoginMemberSerializer
 
 from application.config import Config
+from application.exceptions import ValidationException
 
 
 def request_validator(serializer, data):
-    if not eval(serializer)().validate(data):
-        return True
+    try:
+        if not eval(serializer)().validate(data):
+            return True
+        
+        else:
+            return False
     
-    else:
-         return False
+    except:
+        raise ValidationException
 
 
 def email_validator(email):
-    email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-    if(re.fullmatch(email_pattern, email)):
-        return True
-    
-    else:
-        return False
+    try:
+        email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        if(re.fullmatch(email_pattern, email)):
+            return True
+        
+        else:
+            return False
+
+    except:
+        raise ValidationException
 
 
 def password_length_validator(password):
-    if len(password) < Config.MIN_PASSWORD_LENGTH or len(password) > Config.MAX_PASSWORD_LENGTH:
-        return False
+    try:
+        if len(password) < Config.MIN_PASSWORD_LENGTH or len(password) > Config.MAX_PASSWORD_LENGTH:
+            return False
 
-    else:
-        return True
+        else:
+            return True
         
+    except:
+        raise ValidationException

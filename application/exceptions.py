@@ -43,4 +43,9 @@ class EmailNotValid(ApplicationException):
 class PasswordLengthNotValid(ApplicationException):
     status_code = 703
     message = '400 Password Length Not Valid'
+
+
+class ValidationException(ApplicationException):
+    status_code = 704
+    message = '400 Validation Exception'
     

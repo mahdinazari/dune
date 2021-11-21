@@ -21,3 +21,8 @@ class MemberSerializer(Schema):
     add_to_room = fields.Boolean(default=True)
     removed_at = fields.DateTime(default=None)
     created_at = fields.DateTime(default=datetime.now())
+
+
+class LoginMemberSerializer(Schema):
+    email = fields.String(required=True)
+    password = fields.String(required=True)
