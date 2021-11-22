@@ -2,12 +2,18 @@ import importlib
 
 from flask import Flask, jsonify
 
+from .extensions import db, migrate, ma, jwt
 from .exceptions import ApplicationException
 
 
 def create_app(config_file):
     app = Flask(__name__)
     app.config.from_object(config_file)
+
+    db.init_app(app)
+    migrate.init_app(app, db)
+    ma.init_app(app)
+    jwt.init_app(app)
 
     for installed_app in app.config['INSTALLED_APPS']:
         view = importlib.import_module('views.{}'.format(installed_app))

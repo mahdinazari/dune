@@ -1,3 +1,11 @@
-flask
+Flask==1.1.2
 python-dotenv
 marshmallow==3.8.0
+flask-marshmallow==0.13.0
+Flask-Migrate==2.5.3
+Flask-Script==2.0.6
+Flask-SQLAlchemy==2.4.0
+marshmallow-sqlalchemy==0.23.1
+SQLAlchemy==1.3.17
+Flask-JWT-Extended==3.24.1
+psycopg2
