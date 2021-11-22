@@ -16,7 +16,7 @@ class MemberSerializer(Schema):
     max = Config.MAX_PASSWORD_LENGTH
 
     email = fields.String(required=True)
-    hashed_password = fields.String(required=True, validate=validate.Length(min=min, max=max))
+    password = fields.String(required=True, validate=validate.Length(min=min, max=max))
     fullname = fields.String(required=False)
     add_to_room = fields.Boolean(default=True)
     removed_at = fields.DateTime(default=None)

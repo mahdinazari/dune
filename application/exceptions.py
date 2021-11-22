@@ -49,3 +49,13 @@ class ValidationException(ApplicationException):
     status_code = 704
     message = '400 Validation Exception'
     
+
+class DuplicateMemberFound(ApplicationException):
+    status_code = 705
+    message = "Duplicate Member Found"
+
+
+class RegisterFailed(ApplicationException):
+    status_code = 706
+    message = "Register Failed"
+    
