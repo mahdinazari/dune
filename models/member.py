@@ -4,20 +4,26 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from werkzeug.security import generate_password_hash
 
+from application.mixin import SoftDeleteMixin
 from application.extensions import db, ma
 
 
-class Member(db.Model):
+class Member(db.Model, SoftDeleteMixin):
     __tablename__ = 'member'
 
     id = db.Column(UUID(as_uuid=True), default=uuid4, primary_key=True)
-    email = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
     hashed_password = db.Column(db.String, nullable=False)
     fullname = db.Column(db.String, nullable=True)
     add_to_room = db.Column(db.Boolean, default=True)
     removed_at = db.Column(db.DateTime, default=None)
     created_at = db.Column(db.DateTime, default=datetime.now())
 
+    # Unique constraint on email
+    __table_args__ = (
+        db.UniqueConstraint('email', name='_account_branch_uc'),
+    )
+    
     def __init__(self, email, hashed_password, fullname):
         self.email = email
         self.hashed_password = hashed_password
@@ -31,7 +37,6 @@ class Member(db.Model):
         return dict(
             id=self.id,
             email=self.email,
-            hashed_password=cls.hashed_password,
             fullname=self.fullname,
             created_at=self.created_at,
             removed_at=self.removed_at,
@@ -40,13 +45,13 @@ class Member(db.Model):
         )
 
 
-# class MemberSchema(ma.SQLAlchemyAutoSchema):
-#     is_deleted = ma.Method('get_member_status')
+class MemberSchema(ma.SQLAlchemyAutoSchema):
+    is_deleted = ma.Method('get_member_status')
 
-#     class Meta:
-#         model = Member
-#         exclude = ['hashed_password']
+    class Meta:
+        model = Member
+        exclude = ['hashed_password']
 
-#     def get_member_status(self, obj):
-#         status = True if obj.removed_at else False
-#         return status
+    def get_member_status(self, obj):
+        status = True if obj.removed_at else False
+        return status

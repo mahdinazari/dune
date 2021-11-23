@@ -13,10 +13,13 @@ class Config:
 
     # Keys
     SECRET_KEY = os.environ.get('SECRET_KEY', 'ASDASDOWIQ!@&EQHC<XNYWGYW#!@')
-    
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', '@ASDASDOWIQ!@&EQHC<XNYWGYW#!@')
-    JWT_EXPIRES_DELTA = timedelta(days=10)
 
+    # JWT    
+    JWT_EXPIRES_DELTA = timedelta(days=10)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=1)
+    # JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
     # SQLAlchemy
     SQLALCHEMY_ECHO = False

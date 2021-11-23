@@ -52,10 +52,24 @@ class ValidationException(ApplicationException):
 
 class DuplicateMemberFound(ApplicationException):
     status_code = 705
-    message = "Duplicate Member Found"
+    message = "400 Duplicate Member Found"
 
 
 class RegisterFailed(ApplicationException):
     status_code = 706
-    message = "Register Failed"
-    
+    message = "400 Register Failed"
+
+
+class EmailNotInForm(ApplicationException):
+    status_code = 706
+    message = "400 Email Not In Form"
+
+
+class PasswordNotInForm(ApplicationException):
+    status_code = 706
+    message = "400 Password Not In Form"
+
+
+class MemberNotFound(ApplicationException):
+    status_code = 706
+    message = "400 Member Not Found"
