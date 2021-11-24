@@ -1,6 +1,7 @@
 from flask import Blueprint,request, jsonify
 from werkzeug.security import check_password_hash
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, \
+    fresh_jwt_required, jwt_refresh_token_required
 
 from utils import request_validator, email_validator, password_length_validator
 
@@ -61,7 +62,6 @@ def regirster():
 
 @blueprint.route('/login', methods=['POST'])
 def login():
-    import pudb; pudb.set_trace()
     if not request.json:
         raise EmptyList()
 
@@ -92,15 +92,15 @@ def login():
 
     access_token_expires = Config.JWT_ACCESS_TOKEN_EXPIRES
     refresh_token_expires = Config.JWT_REFRESH_TOKEN_EXPIRES
-    payload = {"id": member.id, "email": member.email}
+    identity = {"id": member.id, "email": member.email}
     access_token = create_access_token(
-        identity=payload,
+        identity=identity,
         expires_delta=access_token_expires,
         fresh=False
     )
      
     refresh_token = create_refresh_token(
-        identity=payload,
+        identity=identity,
         expires_delta=refresh_token_expires,
     )
     response = {
@@ -108,12 +108,21 @@ def login():
         "refresh_token": refresh_token
     }
 
-    import pudb; pudb.set_trace()
     return jsonify(response), 200 
 
 
+
+@blueprint.route('/refresh', methods=['GET'])
+@jwt_refresh_token_required
+def refresh():
+    identity = get_jwt_identity()
+    access_token = create_access_token(identity=identity)
+    return jsonify(access_token=access_token)
+
+
+
 @blueprint.route('/sample', methods=['GET'])
-@jwt_required
+@fresh_jwt_required
 def sample():
     current_user = get_jwt_identity()
     return current_user
