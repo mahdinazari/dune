@@ -8,6 +8,7 @@ from utils import request_validator, email_validator, password_length_validator
 from models.member import Member
 from application.config import Config
 from application.extensions import db 
+from application.redis_client import r
 from application.exceptions import ForemDataNotValid, EmailNotValid, PasswordLengthNotValid, DuplicateMemberFound, \
     RegisterFailed, EmailNotInForm, PasswordNotInForm, MemberNotFound
 
@@ -107,9 +108,15 @@ def login():
         "access_token": access_token,
         "refresh_token": refresh_token
     }
+    import pudb; pudb.set_trace()
+    try:
+        r.set(str(member.id), member.email)
+        value = r.get(str(member.id))
+    
+    except:
+        pass
 
     return jsonify(response), 200 
-
 
 
 @blueprint.route('/refresh', methods=['GET'])
@@ -120,9 +127,8 @@ def refresh():
     return jsonify(access_token=access_token)
 
 
-
 @blueprint.route('/sample', methods=['GET'])
-@fresh_jwt_required
+@jwt_required
 def sample():
     current_user = get_jwt_identity()
     return current_user

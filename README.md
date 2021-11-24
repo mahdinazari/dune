@@ -12,9 +12,6 @@ make test
 ```
 
 #### TODO
-- JWT
-- Authorization
-- Request validation using model
 - Dockerize
 - docker-compose
 - Celery (rabitMQ or kafka)
@@ -29,3 +26,6 @@ make test
 - Unit Test
 - Schema validation
 - Custom Exception Handler
+- Authorization with `jwt access token` and `jwt refresh token`
+- Redis
+- Serializer and serializer validation

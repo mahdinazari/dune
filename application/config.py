@@ -17,8 +17,7 @@ class Config:
 
     # JWT    
     JWT_EXPIRES_DELTA = timedelta(days=10)
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)
-    # JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
     # SQLAlchemy
@@ -40,6 +39,12 @@ class Config:
     # Application config
     MIN_PASSWORD_LENGTH = 6
     MAX_PASSWORD_LENGTH = 25
+
+    # Redis
+    REDIS_HOST = os.environ.get('REDIS_HOST', '')
+    REDIS_PORT = os.environ.get('REDIS_PORT', '')
+    REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
+    REDIS_DB = os.environ.get('REDIS_DB', 10)
 
 
 class DevelopConfig(Config):
