@@ -135,6 +135,7 @@ def refresh():
 
 
 @blueprint.route('/get/<id>', methods=['GET'])
+@jwt_required
 def get(id):
     schema = MemberSchema()
     member = Member.query.get_or_404(id)
@@ -144,9 +145,9 @@ def get(id):
     return jsonify(schema.dump(member)), 200
 
 
-@blueprint.route('/sample', methods=['GET'])
+@blueprint.route('/list', methods=['GET'])
 @jwt_required
-def sample():
-    current_user = get_jwt_identity()
-    return current_user
+def list():
+    members = Member.query.filter_by(removed_at=None).all()
+    return jsonify(MemberSchema(many=True).dump(members)), 200
 
