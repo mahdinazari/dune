@@ -55,3 +55,4 @@ class MemberSchema(ma.SQLAlchemyAutoSchema):
     def get_member_status(self, obj):
         status = True if obj.removed_at else False
         return status
+

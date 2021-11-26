@@ -5,10 +5,10 @@ from flask_jwt_extended import create_access_token, create_refresh_token, \
 
 from utils import request_validator, email_validator, password_length_validator
 
-from models.member import Member
 from application.config import Config
 from application.extensions import db
 from application.redis_client import r
+from models.member import Member, MemberSchema
 from application.exceptions import ForemDataNotValid, EmailNotValid, \
     PasswordLengthNotValid, DuplicateMemberFound, RegisterFailed, \
     EmailNotInForm, PasswordNotInForm, MemberNotFound
@@ -134,8 +134,19 @@ def refresh():
     return jsonify(access_token=access_token)
 
 
+@blueprint.route('/get/<id>', methods=['GET'])
+def get(id):
+    schema = MemberSchema()
+    member = Member.query.get_or_404(id)
+    if member.is_deleted:
+        return jsonify('404 Member Not Found'), 400
+
+    return jsonify(schema.dump(member)), 200
+
+
 @blueprint.route('/sample', methods=['GET'])
 @jwt_required
 def sample():
     current_user = get_jwt_identity()
     return current_user
+
