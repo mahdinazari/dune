@@ -1,16 +1,17 @@
 from flask import Blueprint,request, jsonify
 from werkzeug.security import check_password_hash
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, \
-    fresh_jwt_required, jwt_refresh_token_required
+from flask_jwt_extended import create_access_token, create_refresh_token, \
+    get_jwt_identity, jwt_required, jwt_refresh_token_required
 
 from utils import request_validator, email_validator, password_length_validator
 
 from models.member import Member
 from application.config import Config
-from application.extensions import db 
+from application.extensions import db
 from application.redis_client import r
-from application.exceptions import ForemDataNotValid, EmailNotValid, PasswordLengthNotValid, DuplicateMemberFound, \
-    RegisterFailed, EmailNotInForm, PasswordNotInForm, MemberNotFound
+from application.exceptions import ForemDataNotValid, EmailNotValid, \
+    PasswordLengthNotValid, DuplicateMemberFound, RegisterFailed, \
+    EmailNotInForm, PasswordNotInForm, MemberNotFound
 
 
 blueprint = Blueprint('member', __name__, url_prefix='/api/v1/member')
@@ -18,10 +19,17 @@ blueprint = Blueprint('member', __name__, url_prefix='/api/v1/member')
 
 @blueprint.route('/register', methods=['POST'])
 def regirster():
+    if not request.json:
+        raise EmptyList()
+
     try:
         data = request.json
-    
+
     except:
+        raise ForemDataNotValid
+
+    is_valid = request_validator('MemberSerializer', data)
+    if not is_valid:
         raise ForemDataNotValid
 
     if not email_validator(data['email']):
@@ -43,11 +51,11 @@ def regirster():
         duplicate_member = Member.query \
             .filter(Member.email == member.email) \
             .first()
-        
+
     except:
         return jsonify("Register Exception"), 400
 
-    
+
     if duplicate_member:
         raise DuplicateMemberFound
 
@@ -58,7 +66,7 @@ def regirster():
     except Exception:
         db.session.rollback()
 
-    return jsonify("Member Has Been Registered Successfully"), 200 
+    return jsonify("Member Has Been Registered Successfully"), 200
 
 
 @blueprint.route('/login', methods=['POST'])
@@ -74,10 +82,10 @@ def login():
 
     try:
         data = request.json
-    
+
     except:
         raise ForemDataNotValid
-    
+
     if not request_validator('LoginMemberSerializer', data):
         raise ForemDataNotValid
 
@@ -87,19 +95,19 @@ def login():
 
     if not member or member.is_deleted:
         raise MemberNotFound()
-    
+
     if not check_password_hash(member.hashed_password, data['password']):
         raise MemberNotFound()
 
     access_token_expires = Config.JWT_ACCESS_TOKEN_EXPIRES
     refresh_token_expires = Config.JWT_REFRESH_TOKEN_EXPIRES
-    identity = {"id": member.id, "email": member.email}
+    identity = {"id": str(member.id), "email": member.email}
     access_token = create_access_token(
         identity=identity,
         expires_delta=access_token_expires,
         fresh=False
     )
-     
+
     refresh_token = create_refresh_token(
         identity=identity,
         expires_delta=refresh_token_expires,
@@ -108,15 +116,14 @@ def login():
         "access_token": access_token,
         "refresh_token": refresh_token
     }
-    import pudb; pudb.set_trace()
     try:
         r.set(str(member.id), member.email)
         value = r.get(str(member.id))
-    
+
     except:
         pass
 
-    return jsonify(response), 200 
+    return jsonify(response), 200
 
 
 @blueprint.route('/refresh', methods=['GET'])

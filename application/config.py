@@ -12,10 +12,12 @@ class Config:
         load_dotenv(dotenv_path)
 
     # Keys
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'ASDASDOWIQ!@&EQHC<XNYWGYW#!@')
-    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', '@ASDASDOWIQ!@&EQHC<XNYWGYW#!@')
+    SECRET_KEY = os.environ.get('SECRET_KEY')
 
-    # JWT    
+    # JWT
+    JWT_COOKIE_SECURE = False
+    JWT_TOKEN_LOCATION = ["cookies"]
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     JWT_EXPIRES_DELTA = timedelta(days=10)
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
@@ -26,7 +28,7 @@ class Config:
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('PRODUCTION_DATABASE_URL')
-   
+
     # Apps
     INSTALLED_APPS = [
         'version',
@@ -54,3 +56,4 @@ class DevelopConfig(Config):
 class TestConfig(DevelopConfig):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL')
+

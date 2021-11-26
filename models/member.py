@@ -21,9 +21,9 @@ class Member(db.Model, SoftDeleteMixin):
 
     # Unique constraint on email
     __table_args__ = (
-        db.UniqueConstraint('email', name='_account_branch_uc'),
+        db.UniqueConstraint('email', name='_account_email_unique'),
     )
-    
+
     def __init__(self, email, hashed_password, fullname):
         self.email = email
         self.hashed_password = hashed_password

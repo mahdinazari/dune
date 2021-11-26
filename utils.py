@@ -10,10 +10,10 @@ def request_validator(serializer, data):
     try:
         if not eval(serializer)().validate(data):
             return True
-        
+
         else:
             return False
-    
+
     except:
         raise ValidationException
 
@@ -23,7 +23,7 @@ def email_validator(email):
         email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         if(re.fullmatch(email_pattern, email)):
             return True
-        
+
         else:
             return False
 
@@ -38,6 +38,6 @@ def password_length_validator(password):
 
         else:
             return True
-        
+
     except:
         raise ValidationException
