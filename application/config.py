@@ -19,7 +19,7 @@ class Config:
     JWT_TOKEN_LOCATION = ["cookies"]
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     JWT_EXPIRES_DELTA = timedelta(days=10)
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=3)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
     # SQLAlchemy

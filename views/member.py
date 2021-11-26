@@ -118,7 +118,7 @@ def login():
     }
     try:
         r.set(str(member.id), member.email)
-        value = r.get(str(member.id))
+        r.expire(str(member.id), Config.JWT_ACCESS_TOKEN_EXPIRES)
 
     except:
         pass
