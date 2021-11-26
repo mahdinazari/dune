@@ -11,7 +11,7 @@ from application.redis_client import r
 from models.member import Member, MemberSchema
 from application.exceptions import ForemDataNotValid, EmailNotValid, \
     PasswordLengthNotValid, DuplicateMemberFound, RegisterFailed, \
-    EmailNotInForm, PasswordNotInForm, MemberNotFound
+    EmailNotInForm, PasswordNotInForm, MemberNotFound, EmptyList
 
 
 blueprint = Blueprint('member', __name__, url_prefix='/api/v1/member')
@@ -20,7 +20,7 @@ blueprint = Blueprint('member', __name__, url_prefix='/api/v1/member')
 @blueprint.route('/register', methods=['POST'])
 def regirster():
     if not request.json:
-        raise EmptyList()
+        raise EmptyList
 
     try:
         data = request.json
@@ -72,7 +72,7 @@ def regirster():
 @blueprint.route('/login', methods=['POST'])
 def login():
     if not request.json:
-        raise EmptyList()
+        raise EmptyList
 
     if 'email' not in request.json:
         raise EmailNotInForm()

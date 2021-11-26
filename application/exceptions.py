@@ -48,7 +48,7 @@ class PasswordLengthNotValid(ApplicationException):
 class ValidationException(ApplicationException):
     status_code = 704
     message = '400 Validation Exception'
-    
+
 
 class DuplicateMemberFound(ApplicationException):
     status_code = 705
@@ -73,3 +73,10 @@ class PasswordNotInForm(ApplicationException):
 class MemberNotFound(ApplicationException):
     status_code = 706
     message = "400 Member Not Found"
+
+
+
+class EmptyList(ApplicationException):
+    status_code = 707
+    message = "404 Empty List"
+

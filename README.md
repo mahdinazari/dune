@@ -17,7 +17,6 @@ make test
 - Celery (rabitMQ or kafka)
 - before after request
 - manage.py
-- Cors
 - Logging
 - Swagger
 
@@ -29,3 +28,4 @@ make test
 - Authorization with `jwt access token` and `jwt refresh token`
 - Redis
 - Serializer and serializer validation
+- Cors
