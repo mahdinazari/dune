@@ -19,8 +19,6 @@ class Member(db.Model, SoftDeleteMixin):
     removed_at = db.Column(db.DateTime, default=None)
     created_at = db.Column(db.DateTime, default=datetime.now())
 
-    role = db.Column(UUID(as_uuid=True), db.ForeignKey('role.id'))
-
     # Unique constraint on email
     __table_args__ = (
         db.UniqueConstraint('email', name='_account_email_unique'),

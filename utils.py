@@ -1,6 +1,7 @@
 import re
 
 from serializers.member import MemberSerializer, LoginMemberSerializer
+from serializers.access import AccessSerializer
 
 from application.config import Config
 from application.exceptions import ValidationException
@@ -14,20 +15,20 @@ def request_validator(serializer, data):
         else:
             return False
 
-    except:
+    except Exception as e:
         raise ValidationException
 
 
 def email_validator(email):
     try:
         email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        if(re.fullmatch(email_pattern, email)):
+        if re.fullmatch(email_pattern, email):
             return True
 
         else:
             return False
 
-    except:
+    except Exception as e:
         raise ValidationException
 
 
@@ -39,5 +40,5 @@ def password_length_validator(password):
         else:
             return True
 
-    except:
+    except Exception as e:
         raise ValidationException

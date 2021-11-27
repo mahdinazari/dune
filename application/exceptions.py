@@ -16,6 +16,7 @@ Usage of created exception in Views Example:
 ```
 """
 
+
 class ApplicationException(Exception):
     status_code = 400
     message =  "Empty"
@@ -30,7 +31,7 @@ class ApplicationException(Exception):
         return rv
 
 
-class ForemDataNotValid(ApplicationException):
+class FormDataNotValid(ApplicationException):
     status_code = 701
     message = '400 Form Data Not Valid'
 
@@ -55,9 +56,9 @@ class DuplicateMemberFound(ApplicationException):
     message = "400 Duplicate Member Found"
 
 
-class RegisterFailed(ApplicationException):
+class InsertDBFailed(ApplicationException):
     status_code = 706
-    message = "400 Register Failed"
+    message = "400 Insert DB Failed"
 
 
 class EmailNotInForm(ApplicationException):
@@ -75,8 +76,11 @@ class MemberNotFound(ApplicationException):
     message = "400 Member Not Found"
 
 
-
-class EmptyList(ApplicationException):
+class EmptyForm(ApplicationException):
     status_code = 707
     message = "404 Empty List"
 
+
+class DuplicateAccess(ApplicationException):
+    status_code = 708
+    message = "400 Duplicate Access"

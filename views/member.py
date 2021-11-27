@@ -9,28 +9,28 @@ from application.config import Config
 from application.extensions import db
 from application.redis_client import r
 from models.member import Member, MemberSchema
-from application.exceptions import ForemDataNotValid, EmailNotValid, \
-    PasswordLengthNotValid, DuplicateMemberFound, RegisterFailed, \
-    EmailNotInForm, PasswordNotInForm, MemberNotFound, EmptyList
+from application.exceptions import FormDataNotValid, EmailNotValid, \
+    PasswordLengthNotValid, DuplicateMemberFound, InsertDBFailed, \
+    EmailNotInForm, PasswordNotInForm, MemberNotFound, EmptyForm
 
 
 blueprint = Blueprint('member', __name__, url_prefix='/api/v1/member')
 
 
 @blueprint.route('/register', methods=['POST'])
-def regirster():
+def register():
     if not request.json:
-        raise EmptyList
+        raise EmptyForm
 
     try:
         data = request.json
 
-    except:
-        raise ForemDataNotValid
+    except Exception as e:
+        raise FormDataNotValid
 
     is_valid = request_validator('MemberSerializer', data)
     if not is_valid:
-        raise ForemDataNotValid
+        raise FormDataNotValid
 
     if not email_validator(data['email']):
         raise EmailNotValid
@@ -39,8 +39,9 @@ def regirster():
         raise PasswordLengthNotValid
 
     if not request_validator('MemberSerializer', data):
-        raise ForemDataNotValid
+        raise FormDataNotValid
 
+    import pudb; pudb.set_trace()
     try:
         email = data.get('email')
         password = data.get('password')
@@ -52,9 +53,8 @@ def regirster():
             .filter(Member.email == member.email) \
             .first()
 
-    except:
+    except Exception as e:
         return jsonify("Register Exception"), 400
-
 
     if duplicate_member:
         raise DuplicateMemberFound
@@ -63,8 +63,9 @@ def regirster():
         db.session.add(member)
         db.session.commit()
 
-    except Exception:
+    except Exception as e:
         db.session.rollback()
+        raise InsertDBFailed
 
     return jsonify("Member Has Been Registered Successfully"), 200
 
@@ -72,7 +73,7 @@ def regirster():
 @blueprint.route('/login', methods=['POST'])
 def login():
     if not request.json:
-        raise EmptyList
+        raise EmptyForm
 
     if 'email' not in request.json:
         raise EmailNotInForm()
@@ -84,10 +85,10 @@ def login():
         data = request.json
 
     except:
-        raise ForemDataNotValid
+        raise FormDataNotValid
 
     if not request_validator('LoginMemberSerializer', data):
-        raise ForemDataNotValid
+        raise FormDataNotValid
 
     member = Member.query \
         .filter(Member.email == data['email']) \

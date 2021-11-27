@@ -13,4 +13,4 @@ class Access(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now())
     removed_at = db.Column(db.DateTime, default=None)
     
-    role = db.relationship('Role')
+    #role = db.relationship('Role')

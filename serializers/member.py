@@ -2,7 +2,6 @@ from uuid import uuid4
 from datetime import datetime
 
 from marshmallow import Schema, fields, validate
-from werkzeug.security import generate_password_hash
 
 from application.config import Config
 

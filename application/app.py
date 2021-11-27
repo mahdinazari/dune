@@ -14,7 +14,7 @@ def create_app(config_file):
     migrate.init_app(app, db)
     ma.init_app(app)
     jwt.init_app(app)
-    csrf.init_app(app)
+    #csrf.init_app(app)
     cors.init_app(app)
 
     for installed_app in app.config['INSTALLED_APPS']:
