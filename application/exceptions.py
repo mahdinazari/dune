@@ -81,6 +81,12 @@ class EmptyForm(ApplicationException):
     message = "404 Empty List"
 
 
-class DuplicateAccess(ApplicationException):
+class DuplicateAccessFound(ApplicationException):
     status_code = 708
-    message = "400 Duplicate Access"
+    message = "400 Duplicate Access Found"
+
+
+class DuplicateRoleFound(ApplicationException):
+    status_code = 709
+    message = "400 Duplicate Role Found"
+

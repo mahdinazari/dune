@@ -16,10 +16,9 @@ class Config:
 
     # JWT
     JWT_COOKIE_SECURE = False
-    JWT_TOKEN_LOCATION = ["cookies"]
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     JWT_EXPIRES_DELTA = timedelta(days=10)
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=3)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
     # SQLAlchemy
@@ -27,12 +26,16 @@ class Config:
     SQLALCHEMY_BINDS = False
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('PRODUCTION_DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'PRODUCTION_DATABASE_URL',
+        'postgres://postgres:postgres@localhost/dune'
+    )
 
     # Apps
     INSTALLED_APPS = [
         'version',
         'member',
+        'role',
     ]
 
     # Version

@@ -41,7 +41,6 @@ def register():
     if not request_validator('MemberSerializer', data):
         raise FormDataNotValid
 
-    import pudb; pudb.set_trace()
     try:
         email = data.get('email')
         password = data.get('password')
@@ -135,8 +134,8 @@ def refresh():
     return jsonify(access_token=access_token)
 
 
-@blueprint.route('/get/<id>', methods=['GET'])
 @jwt_required
+@blueprint.route('/get/<id>', methods=['GET'])
 def get(id):
     schema = MemberSchema()
     member = Member.query.get_or_404(id)

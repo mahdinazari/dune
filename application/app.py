@@ -11,9 +11,9 @@ def create_app(config_file):
     app.config.from_object(config_file)
 
     db.init_app(app)
+    jwt.init_app(app)
     migrate.init_app(app, db)
     ma.init_app(app)
-    jwt.init_app(app)
     #csrf.init_app(app)
     cors.init_app(app)
 
