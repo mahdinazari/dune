@@ -2,7 +2,7 @@ from uuid import uuid4
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
 
-from application.extensions import db
+from application.extensions import db, ma
 from application.mixin import SoftDeleteMixin
 
 
@@ -15,6 +15,10 @@ class Role(db.Model, SoftDeleteMixin):
     removed_at = db.Column(db.DateTime, default=None)
     updated_at = db.Column(db.DateTime, default=datetime.now())
 
-    member = db.Column(UUID(as_uuid=True), db.ForeignKey('member.id'))
     #accesses = db.relationship("Access", backref="role", lazy='dynamic')
-    
+
+
+class RoleSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Role
+

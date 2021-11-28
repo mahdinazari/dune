@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash
 
 from application.mixin import SoftDeleteMixin
 from application.extensions import db, ma
+from models.role import RoleSchema
 
 
 class Member(db.Model, SoftDeleteMixin):
@@ -18,6 +19,9 @@ class Member(db.Model, SoftDeleteMixin):
     add_to_room = db.Column(db.Boolean, default=True)
     removed_at = db.Column(db.DateTime, default=None)
     created_at = db.Column(db.DateTime, default=datetime.now())
+
+    role = db.relationship('Role')
+    role_id = db.Column(UUID(as_uuid=True), db.ForeignKey('role.id'))
 
     # Unique constraint on email
     __table_args__ = (
@@ -38,6 +42,8 @@ class Member(db.Model, SoftDeleteMixin):
             id=self.id,
             email=self.email,
             fullname=self.fullname,
+            role_id=self.role_id,
+            role=self.role,
             created_at=self.created_at,
             removed_at=self.removed_at,
             is_deleted=self.is_deleted,
@@ -47,6 +53,7 @@ class Member(db.Model, SoftDeleteMixin):
 
 class MemberSchema(ma.SQLAlchemyAutoSchema):
     is_deleted = ma.Method('get_member_status')
+    role = ma.Nested('RoleSchema',  only=['id', 'title'])
 
     class Meta:
         model = Member

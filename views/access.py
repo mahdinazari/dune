@@ -45,3 +45,4 @@ def create():
         raise InsertDBFailed
 
     return jsonify("Member Has Been Registered Successfully"), 200
+
