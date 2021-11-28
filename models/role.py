@@ -15,6 +15,9 @@ class Role(db.Model, SoftDeleteMixin):
     removed_at = db.Column(db.DateTime, default=None)
     updated_at = db.Column(db.DateTime, default=datetime.now())
 
+    def __init__(self, title):
+        self.title = title
+
     #accesses = db.relationship("Access", backref="role", lazy='dynamic')
 
 

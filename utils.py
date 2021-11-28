@@ -2,6 +2,7 @@ import re
 
 from serializers.member import MemberSerializer, LoginMemberSerializer
 from serializers.access import AccessSerializer
+from serializers.role import RoleSerializer
 
 from application.config import Config
 from application.exceptions import ValidationException
