@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "JSONPERLINE": {
+      "format": "%(message)s"
+    },
+    "simple": {
+      "format": "[%(asctime)s] %(levelname)s %(message)s",
+      "datefmt": "%Y-%m-%d %H:%M:%S"
+    },
+    "verbose": {
+      "format": "[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
+      "datefmt": "%Y-%m-%d %H:%M:%S"
+    },
+    "transaction": {
+      "format": "%(message)s"
+    }
+  },
+  "handlers": {
+    "logstash": {
+      "level": "DEBUG",
+      "class": "logstash.LogstashHandler",
+      "host": "127.0.0.0",
+      "port": 9900,
+      "tags": [
+        "admin-panel-login"
+      ]
+    },
+    "transaction_logfile": {
+      "level": "DEBUG",
+      "class": "logging.FileHandler",
+      "filename": "transaction.log",
+      "formatter": "transaction"
+    },
+    "app_logfile": {
+      "level": "WARNING",
+      "class": "logging.FileHandler",
+      "filename": "app.log",
+      "formatter": "transaction"
+    },
+    "sdk_transaction_logfile": {
+      "level": "DEBUG",
+      "class": "logging.FileHandler",
+      "filename": "sdk_transaction.log",
+      "formatter": "transaction"
+    },
+    "sdk_base_logfile": {
+      "level": "WARNING",
+      "class": "logging.FileHandler",
+      "filename": "sdk_base.log",
+      "formatter": "transaction"
+    }
+  },
+  "loggers": {
+    "transaction_logger": {
+      "handlers": [
+        "transaction_logfile"
+      ],
+      "level": "DEBUG"
+    },
+    "ms_logger": {
+      "handlers": [
+        "app_logfile"
+      ],
+      "level": "WARNING"
+    },
+    "sdk_transaction_logger": {
+      "handlers": [
+        "sdk_transaction_logfile"
+      ],
+      "level": "DEBUG"
+    },
+    "sdk_base_logger": {
+      "handlers": [
+        "sdk_base_logfile"],
+      "level": "WARNING"
+    }
+  }
+}

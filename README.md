@@ -19,6 +19,7 @@ make test
 - manage.py
 - Logging
 - Swagger
+- ws
 
 
 #### Features

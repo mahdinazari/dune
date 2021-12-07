@@ -1,4 +1,4 @@
-from flask import Blueprint,request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 
 from application.extensions import db
@@ -65,4 +65,3 @@ def add(role_id, member_id):
 
     schema = MemberSchema()
     return jsonify(schema.dump(member)), 200
-
