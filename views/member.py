@@ -71,6 +71,7 @@ def register():
 
 @blueprint.route('/login', methods=['POST'])
 def login():
+    log_action = "LOGIN"
     if not request.json:
         raise EmptyForm
 
@@ -122,7 +123,8 @@ def login():
 
     except Exception as e:
         pass
-
+    
+    application_info_logger(200, message="Login Successfully", action=log_action, username=member.username)
     return jsonify(response), 200
 
 

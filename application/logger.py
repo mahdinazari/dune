@@ -18,7 +18,7 @@ def application_info_logger(status_code, message=None, action=None, username=Non
         "logCode": status_code,
         'logMessage': message,
         'action': action,
-        ' user': g.username if username is None else username,
+        ' user': username,
         'time': datetime.datetime.now().isoformat(),
         'extra': kwargs
     }, separators=(',', ':')))
