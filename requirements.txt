@@ -13,4 +13,5 @@ redis
 PyJWT==1.7.0
 flask_wtf
 flask_cors
+Flask-Session
 python-logstash

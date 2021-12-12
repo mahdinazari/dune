@@ -7,6 +7,10 @@ from dotenv import load_dotenv
 
 class Config:
     DEBUG = False
+    
+    # Session
+    SESSION_PERMANENT = False
+    SESSION_TYPE = "filesystem"
 
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
     if os.path.exists(dotenv_path):

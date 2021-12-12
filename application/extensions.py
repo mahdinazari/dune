@@ -12,4 +12,3 @@ ma = Marshmallow()
 jwt = JWTManager()
 csrf = CSRFProtect()
 cors = CORS(resources={r"/api/*": {"origins": "*"}})
-
