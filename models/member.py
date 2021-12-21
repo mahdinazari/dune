@@ -37,6 +37,39 @@ class Member(db.Model, SoftDeleteMixin):
     def hash_password(cls, password):
         return generate_password_hash(password)
 
+
+    @classmethod
+    def authenticate(cls, **kwargs):
+        email = kwargs.get('email')
+        password = kwargs.get('password')
+
+        if not email or not password:
+            return None
+
+        member = cls.query.filter_by(email=email).first()
+        if not member or not check_password_hash(member.password, password):
+            return None
+
+        return member
+
+    @classmethod
+    @jwt_required
+    def current(cls):
+        with current_app.test_request_context():
+            member = Member.query.get(get_jwt_identity())
+            if not member:
+                return jsonify(message="401 Invalid credentials"), 401
+
+        return member
+
+    @classmethod
+    @jwt_required
+    def check_duplicate_email(cls, email):
+        email = Member.query \
+            .filter_by(email=email) \
+            .one_or_none()
+        return True if email is not None else None
+
     def to_dict(self):
         return dict(
             id=self.id,

@@ -300,6 +300,9 @@ def get(id):
 @blueprint.route('/list', methods=['GET'])
 @jwt_required
 def list():
+    import pudb; pudb.set_trace()
+    member = Member()
+    member.current_member
     members = Member.query.filter_by(removed_at=None).all()
     return jsonify(MemberSchema(many=True).dump(members)), 200
 
