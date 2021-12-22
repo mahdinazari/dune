@@ -62,31 +62,35 @@ class InsertDBFailed(ApplicationException):
 
 
 class EmailNotInForm(ApplicationException):
-    status_code = 706
+    status_code = 707
     message = "400 Email Not In Form"
 
 
 class PasswordNotInForm(ApplicationException):
-    status_code = 706
+    status_code = 708
     message = "400 Password Not In Form"
 
 
 class MemberNotFound(ApplicationException):
-    status_code = 706
+    status_code = 709
     message = "400 Member Not Found"
 
 
 class EmptyForm(ApplicationException):
-    status_code = 707
+    status_code = 710
     message = "404 Empty List"
 
 
 class DuplicateAccessFound(ApplicationException):
-    status_code = 708
+    status_code = 711
     message = "400 Duplicate Access Found"
 
 
 class DuplicateRoleFound(ApplicationException):
-    status_code = 709
+    status_code = 712
     message = "400 Duplicate Role Found"
     
+    
+class ListMembersException(ApplicationException):
+    status_code = 713
+    message = "400 List Members Exception"

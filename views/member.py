@@ -10,7 +10,7 @@ from application.extensions import db
 from application.redis_client import r
 from models.member import Member, MemberSchema
 from application.logger import application_info_logger, application_error_logger
-from application.exceptions import FormDataNotValid, EmailNotValid, \
+from application.exceptions import FormDataNotValid, EmailNotValid, ListMembersException, \
     PasswordLengthNotValid, DuplicateMemberFound, InsertDBFailed, \
     EmailNotInForm, PasswordNotInForm, MemberNotFound, EmptyForm
 
@@ -95,7 +95,7 @@ def register():
             400,
             message=f'Register Exception! - {str(e)}',
             action=log_action, 
-            username=member.email,
+            username=email,
         )
         return jsonify("Register Exception"), 400
 
@@ -104,7 +104,7 @@ def register():
             DuplicateMemberFound.status_code,
             message=DuplicateMemberFound.message,
             action=log_action, 
-            username=member.email,
+            username=email,
         )
         raise DuplicateMemberFound
 
@@ -187,7 +187,7 @@ def login():
             MemberNotFound.status_code,
             message=MemberNotFound.message,
             action=log_action,
-            username=None,
+            username=member.email,
         )
         raise MemberNotFound
 
@@ -196,7 +196,7 @@ def login():
             MemberNotFound.status_code,
             message=MemberNotFound.message,
             action=log_action,
-            username=None,
+            username=member.email,
         )
         raise MemberNotFound
 
@@ -219,7 +219,6 @@ def login():
     }
     
     try:
-        import pudb; pudb.set_trace()
         session['user'] = identity
         r.set(str(member.id), member.email)
         r.expire(str(member.id), Config.JWT_ACCESS_TOKEN_EXPIRES)
@@ -266,25 +265,30 @@ def refresh():
 def get(id):
     log_action = 'MEMBER_GET'
     schema = MemberSchema()
-    import pudb; pudb.set_trace()
     try:
-        member = Member.query.get_or_404(id)
+        member = Member.current_member()
+        requested_member = Member.query.get_or_404(id)
     
     except Exception as e:
         application_error_logger(
             MemberNotFound.status_code,
             message=MemberNotFound.message,
             action=log_action,
-            username=None,
+            username=member.email,
         )
         raise MemberNotFound
     
-    if member.is_deleted or not member:
+    # TODO CHECK ADMIN OR MEMBER IS HIM/HER SELF
+    # if requested_member != member or requested_member.is_admin:
+    #     raise 404
+    
+    if requested_member.is_deleted or not requested_member:
         application_error_logger(
             MemberNotFound.status_code,
             message=MemberNotFound.message,
             action=log_action,
-            username=g.user['email'],
+            username=member.email,
+            extra={"requested member": str(requested_member.id)}
         )
         return jsonify('404 Member Not Found'), 404
         
@@ -292,17 +296,29 @@ def get(id):
         200,
         message='Request Successed',
         action=log_action,
-        username=None,
+        username=member.email,
+        extra={"requested member": str(requested_member.id)}
     )
-    return jsonify(schema.dump(member)), 200
+    return jsonify(schema.dump(requested_member)), 200
 
 
 @blueprint.route('/list', methods=['GET'])
 @jwt_required
 def list():
-    import pudb; pudb.set_trace()
-    member = Member()
-    member.current_member
-    members = Member.query.filter_by(removed_at=None).all()
+    log_action = 'LIST_MEMBER'
+    try:
+        member = Member.current_member()
+        members = Member.query.filter_by(removed_at=None).all()
+    
+    except Exception as e:
+        application_error_logger(
+            ListMembersException.status_code,
+            message=ListMembersException.message,
+            action=log_action,
+            username=member.email
+        )
+        raise ListMembersException
+    
+    application_info_logger(200, message=None, action=log_action, username=member.email)
     return jsonify(MemberSchema(many=True).dump(members)), 200
 

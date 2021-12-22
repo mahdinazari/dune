@@ -2,7 +2,9 @@ from uuid import uuid4
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
 
-from werkzeug.security import generate_password_hash
+from flask import current_app, jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from application.mixin import SoftDeleteMixin
 from application.extensions import db, ma
@@ -37,7 +39,6 @@ class Member(db.Model, SoftDeleteMixin):
     def hash_password(cls, password):
         return generate_password_hash(password)
 
-
     @classmethod
     def authenticate(cls, **kwargs):
         email = kwargs.get('email')
@@ -54,12 +55,13 @@ class Member(db.Model, SoftDeleteMixin):
 
     @classmethod
     @jwt_required
-    def current(cls):
+    def current_member(cls):
         with current_app.test_request_context():
-            member = Member.query.get(get_jwt_identity())
+            member = Member.query.get(get_jwt_identity()['id'])
             if not member:
                 return jsonify(message="401 Invalid credentials"), 401
 
+        member.id = str(member.id)
         return member
 
     @classmethod
