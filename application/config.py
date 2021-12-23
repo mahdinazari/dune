@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 class Config:
     DEBUG = False
-    
+
     # Session
     SESSION_PERMANENT = False
     SESSION_TYPE = "filesystem"
@@ -23,7 +23,7 @@ class Config:
     JWT_COOKIE_SECURE = False
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     JWT_EXPIRES_DELTA = timedelta(days=10)
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=200)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
     # SQLAlchemy
@@ -42,7 +42,6 @@ class Config:
         'member',
         'role',
     ]
-
     # Version
     APP_VERSION = 'v0.1.0'
 
@@ -77,4 +76,3 @@ class DevelopConfig(Config):
 class TestConfig(DevelopConfig):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL')
-
