@@ -321,4 +321,3 @@ def list():
     
     application_info_logger(200, message=None, action=log_action, username=member.email)
     return jsonify(MemberSchema(many=True).dump(members)), 200
-
