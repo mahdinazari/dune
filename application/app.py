@@ -1,6 +1,7 @@
 import importlib
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, session
+from flask_session import Session
 
 from .extensions import db, migrate, ma, jwt, csrf, cors
 from .exceptions import ApplicationException
@@ -16,6 +17,7 @@ def create_app(config_file):
     ma.init_app(app)
     #csrf.init_app(app)
     cors.init_app(app)
+    Session(app)
 
     for installed_app in app.config['INSTALLED_APPS']:
         view = importlib.import_module('views.{}'.format(installed_app))
@@ -29,6 +31,12 @@ def create_app(config_file):
         return response
 
     app.app_context().push()
+    
+    # @app.before_request
+    # def before_request():
+    #     import pudb; pudb.set_trace()
+    #     if session:
+    #         pass
 
     return app
 

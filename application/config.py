@@ -1,4 +1,5 @@
 import os
+import json
 from datetime import timedelta
 
 from dotenv import load_dotenv
@@ -6,6 +7,10 @@ from dotenv import load_dotenv
 
 class Config:
     DEBUG = False
+    
+    # Session
+    SESSION_PERMANENT = False
+    SESSION_TYPE = "filesystem"
 
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
     if os.path.exists(dotenv_path):
@@ -50,6 +55,19 @@ class Config:
     REDIS_PORT = os.environ.get('REDIS_PORT', '')
     REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
     REDIS_DB = os.environ.get('REDIS_DB', 10)
+
+    # Logger
+    LOGSTASH_HOST = os.environ.get("LOGSTASH_HOST")
+    LOGSTASH_PORT = os.environ.get("LOGSTASH_PORT")
+    USE_SELF_LOG_CONF = os.environ.get("USE_SELF_LOG_CONF")
+    try:
+        LOGGER_CONFIG_PATH = os.environ.get("LOGGER_CONFIG_PATH")
+        logger_conf_file = open(LOGGER_CONFIG_PATH + '/log_conf.json', 'r')
+
+    except Exception as e:
+        logger_conf_file = open(os.path.dirname(os.path.abspath(__file__)) + '/log_conf.json', 'r')
+
+    LOGGER_CONFIG = json.loads(logger_conf_file.read())
 
 
 class DevelopConfig(Config):

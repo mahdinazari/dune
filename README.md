@@ -17,15 +17,16 @@ make test
 - Celery (rabitMQ or kafka)
 - before after request
 - manage.py
-- Logging
 - Swagger
+- ws
 
 
 #### Features
-- Unit Test
-- Schema validation
-- Custom Exception Handler
 - Authorization with `jwt access token` and `jwt refresh token`
+- Logging
+- Schema validation
+- Unit Test
+- Custom Exception Handler
 - Redis
 - Serializer and serializer validation
 - Cors
