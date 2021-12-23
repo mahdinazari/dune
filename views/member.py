@@ -3,7 +3,9 @@ from werkzeug.security import check_password_hash
 from flask_jwt_extended import create_access_token, create_refresh_token, \
     get_jwt_identity, jwt_required, jwt_refresh_token_required
 
-from utils import request_validator, email_validator, password_length_validator
+from application.decorators import admin_required
+from models import Role
+from utils import request_validator, email_validator, password_length_validator, get_json
 
 from application.config import Config
 from application.extensions import db
@@ -21,27 +23,7 @@ blueprint = Blueprint('member', __name__, url_prefix='/api/v1/member')
 @blueprint.route('/register', methods=['POST'])
 def register():
     log_action = 'MEMBER_REGISTER'
-    if not request.json:
-        application_error_logger(
-            EmptyForm.status_code,
-            message=EmptyForm.message,
-            action=log_action, 
-            username=None,
-        )
-        raise EmptyForm
-
-    try:
-        data = request.json
-
-    except Exception as e:
-        application_error_logger(
-            FormDataNotValid.status_code,
-            message=f'{FormDataNotValid.message} - {str(e)}',
-            action=log_action, 
-            username=None,
-        )
-        raise FormDataNotValid
-
+    data = get_json(log_action)
     is_valid = request_validator('MemberSerializer', data)
     if not is_valid:
         application_error_logger(
@@ -109,6 +91,8 @@ def register():
         raise DuplicateMemberFound
 
     try:
+        user_role = Role.query.filter_by(title='user').first()
+        member.role = Role('user') if user_role is None else user_role
         db.session.add(member)
         db.session.commit()
 
@@ -130,16 +114,8 @@ def register():
 @blueprint.route('/login', methods=['POST'])
 def login():
     log_action = "LOGIN"
-    if not request.json:
-        application_error_logger(
-            EmptyForm.status_code,
-            message=EmptyForm.message,
-            action=log_action,
-            username=None,
-        )
-        raise EmptyForm
-
-    if 'email' not in request.json:
+    data = get_json(log_action)
+    if 'email' not in data:
         application_error_logger(
             EmailNotInForm.status_code,
             message=EmailNotInForm.message,
@@ -148,7 +124,7 @@ def login():
         )
         raise EmailNotInForm
 
-    if 'password' not in request.json:
+    if 'password' not in data:
         application_error_logger(
             PasswordNotInForm.status_code,
             message=PasswordNotInForm.message,
@@ -156,27 +132,6 @@ def login():
             username=None,
         )
         raise PasswordNotInForm
-
-    try:
-        data = request.json
-
-    except Exception as e:
-        application_error_logger(
-            FormDataNotValid.status_code,
-            message=f'{FormDataNotValid.message} - {str(e)}',
-            action=log_action,
-            username=None,
-        )
-        raise FormDataNotValid
-
-    if not request_validator('LoginMemberSerializer', data):
-        application_error_logger(
-            FormDataNotValid.status_code,
-            message=FormDataNotValid.message,
-            action=log_action,
-            username=None,
-        )
-        raise FormDataNotValid
 
     member = Member.query \
         .filter(Member.email == data['email']) \
@@ -277,10 +232,9 @@ def get(id):
             username=member.email,
         )
         raise MemberNotFound
-    
-    # TODO CHECK ADMIN OR MEMBER IS HIM/HER SELF
-    # if requested_member != member or requested_member.is_admin:
-    #     raise 404
+
+    if not requested_member == member or member.member_role != 'admin':
+        raise MemberNotFound
     
     if requested_member.is_deleted or not requested_member:
         application_error_logger(
@@ -294,7 +248,7 @@ def get(id):
         
     application_info_logger(
         200,
-        message='Request Successed',
+        message='Member Returned Successfully',
         action=log_action,
         username=member.email,
         extra={"requested member": str(requested_member.id)}
@@ -304,6 +258,7 @@ def get(id):
 
 @blueprint.route('/list', methods=['GET'])
 @jwt_required
+@admin_required
 def list():
     log_action = 'LIST_MEMBER'
     try:
@@ -319,5 +274,10 @@ def list():
         )
         raise ListMembersException
     
-    application_info_logger(200, message=None, action=log_action, username=member.email)
+    application_info_logger(
+        200,
+        message="List Of Member Returned Successfully",
+        action=log_action,
+        username=member.email
+    )
     return jsonify(MemberSchema(many=True).dump(members)), 200

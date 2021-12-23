@@ -94,3 +94,8 @@ class DuplicateRoleFound(ApplicationException):
 class ListMembersException(ApplicationException):
     status_code = 713
     message = "400 List Members Exception"
+
+
+class AuthorizationError(ApplicationException):
+    status_code = 714
+    message = "401 Authorization Error"

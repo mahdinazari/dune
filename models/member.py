@@ -35,6 +35,10 @@ class Member(db.Model, SoftDeleteMixin):
         self.hashed_password = hashed_password
         self.fullname = fullname
 
+    @property
+    def member_role(self):
+        return None if self.role is None else self.role.title
+
     @classmethod
     def hash_password(cls, password):
         return generate_password_hash(password)
@@ -61,7 +65,6 @@ class Member(db.Model, SoftDeleteMixin):
             if not member:
                 return jsonify(message="401 Invalid credentials"), 401
 
-        member.id = str(member.id)
         return member
 
     @classmethod
@@ -97,4 +100,3 @@ class MemberSchema(ma.SQLAlchemyAutoSchema):
     def get_member_status(self, obj):
         status = True if obj.removed_at else False
         return status
-
