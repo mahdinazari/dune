@@ -68,6 +68,9 @@ class Config:
 
     LOGGER_CONFIG = json.loads(logger_conf_file.read())
 
+    USER_ROLE_NAME = 'user'
+    ADMIN_ROLE_NAME = 'admin'
+
 
 class DevelopConfig(Config):
     DEBUG = True

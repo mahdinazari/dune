@@ -91,8 +91,8 @@ def register():
         raise DuplicateMemberFound
 
     try:
-        user_role = Role.query.filter_by(title='user').first()
-        member.role = Role('user') if user_role is None else user_role
+        user_role = Role.query.filter_by(title=Config.USER_ROLE_NAME).first()
+        member.role = Role(Config.USER_ROLE_NAME) if user_role is None else user_role
         db.session.add(member)
         db.session.commit()
 
@@ -233,7 +233,7 @@ def get(id):
         )
         raise MemberNotFound
 
-    if not requested_member == member and member.member_role == 'user':
+    if not requested_member == member and member.member_role == Config.USER_ROLE_NAME:
         raise MemberNotFound
     
     if requested_member.is_deleted or not requested_member:
