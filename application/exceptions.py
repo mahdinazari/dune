@@ -99,3 +99,8 @@ class ListMembersException(ApplicationException):
 class AuthorizationError(ApplicationException):
     status_code = 714
     message = "401 Authorization Error"
+
+
+class FetchDataException(ApplicationException):
+    status_code = 715
+    message = "400 Fetch Data Exception"

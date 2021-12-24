@@ -7,7 +7,7 @@ from models.member import Member, MemberSchema
 from utils import request_validator, get_json
 from application.decorators import admin_required
 from application.logger import application_info_logger, application_error_logger
-from application.exceptions import FormDataNotValid, DuplicateRoleFound, InsertDBFailed
+from application.exceptions import FormDataNotValid, DuplicateRoleFound, InsertDBFailed, FetchDataException
 
 
 blueprint = Blueprint('role', __name__, url_prefix='/api/v1/role')
@@ -117,3 +117,30 @@ def assign(role_id, member_id):
     )
     schema = MemberSchema()
     return jsonify(schema.dump(member)), 200
+
+
+@blueprint.route('/list', methods=["GET"])
+@jwt_required
+@admin_required
+def list():
+    log_action = 'LIST_ROLES'
+    member = Member.current_member()
+    try:
+        roles = Role.query.all()
+        application_info_logger(
+            200,
+            message='Roles Returned Successfully',
+            action=log_action,
+            username=member.email,
+        )
+        schema = RoleSchema(many=True).dump(roles)
+        return jsonify(schema), 200
+
+    except Exception as e:
+        application_error_logger(
+            FetchDataException.status_code,
+            action=log_action,
+            username=member.email,
+            message=FetchDataException.message
+        )
+        raise FetchDataException.message
