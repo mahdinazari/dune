@@ -5,7 +5,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, \
 
 from application.decorators import admin_required
 from models import Role
-from utils import request_validator, email_validator, password_length_validator, get_json
+from utils import request_validator, email_validator, password_length_validator, get_json, uuid_validator
 
 from application.config import Config
 from application.extensions import db
@@ -219,10 +219,10 @@ def refresh():
 @jwt_required
 def get(id):
     log_action = 'MEMBER_GET'
-    schema = MemberSchema()
+    valid_id = uuid_validator(id)
     try:
         member = Member.current_member()
-        requested_member = Member.query.get_or_404(id)
+        requested_member = Member.query.get_or_404(valid_id)
     
     except Exception as e:
         application_error_logger(
@@ -233,7 +233,7 @@ def get(id):
         )
         raise MemberNotFound
 
-    if not requested_member == member or member.member_role != 'admin':
+    if not requested_member == member and member.member_role == 'user':
         raise MemberNotFound
     
     if requested_member.is_deleted or not requested_member:
@@ -253,6 +253,7 @@ def get(id):
         username=member.email,
         extra={"requested member": str(requested_member.id)}
     )
+    schema = MemberSchema()
     return jsonify(schema.dump(requested_member)), 200
 
 

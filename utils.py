@@ -1,4 +1,5 @@
 import re
+import uuid
 
 from flask import request
 
@@ -7,7 +8,7 @@ from serializers.member import MemberSerializer, LoginMemberSerializer
 from serializers.access import AccessSerializer
 from serializers.role import RoleSerializer
 from application.config import Config
-from application.exceptions import ValidationException, FormDataNotValid, EmptyForm
+from application.exceptions import ValidationException, FormDataNotValid, EmptyForm, BadRequest
 
 
 def get_json(log_action, member=None):
@@ -72,3 +73,17 @@ def password_length_validator(password):
 
     except Exception as e:
         raise ValidationException
+
+
+def uuid_validator(id):
+    try:
+        pattern = r'\b[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}\b'
+        uuid4hex = re.fullmatch(pattern, id)
+        if uuid4hex:
+            return id
+
+        valid_id = uuid.UUID(id)
+        return valid_id
+
+    except Exception as e:
+        raise BadRequest
