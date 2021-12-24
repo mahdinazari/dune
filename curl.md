@@ -29,3 +29,7 @@ curl -X POST localhost:5000/api/v1/role/create --data '{"title": "admin"}' --hea
 ```
 curl localhost:5001/api/v1/role/assign/47de602a-9daf-4cd0-b716-8f2fb682714b/member/a31c9897-f082-4795-a60f-0d392c8b981c  --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDAyODg2MTQsIm5iZiI6MTY0MDI4ODYxNCwianRpIjoiNDM0NWRjMDctYWQwMy00ZDA2LTg3ODUtMWExM2YzMGYwYzRjIiwiZXhwIjoxNjQwMzAwNjE0LCJpZGVudGl0eSI6eyJpZCI6ImQ5NmU3ZjFiLTRkMjktNGM4Ny1hZjFhLTFlYTFmM2IwN2U1ZiIsImVtYWlsIjoibWVoZGkubmF6YXJpLjM3MjdAZ21haWwuY29tIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9._MHBwa6upehanki5TYVYS_c1VJIT3bLEiI-aefTyXHk"
 ```
+- List
+```
+url localhost:5000/api/v1/role/list -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDAzNjU4MTYsIm5iZiI6MTY0MDM2NTgxNiwianRpIjoiMmI2YjZlMDQtMDk1My00NmYxLTk4OGYtZjcyYmVkY2FhMTA2IiwiZXhwIjoxNjQwMzc3ODE2LCJpZGVudGl0eSI6eyJpZCI6ImQ5NmU3ZjFiLTRkMjktNGM4Ny1hZjFhLTFlYTFmM2IwN2U1ZiIsImVtYWlsIjoibWVoZGkubmF6YXJpLjM3MjdAZ21haWwuY29tIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.KoMmC_0RDOZbSe18NtSpvqeNIzp00pTZgSJCY2gL8kM"
+```
