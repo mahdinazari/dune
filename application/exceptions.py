@@ -104,3 +104,13 @@ class AuthorizationError(ApplicationException):
 class FetchDataException(ApplicationException):
     status_code = 715
     message = "400 Fetch Data Exception"
+
+
+class RoleNotFound(ApplicationException):
+    status_code = 716
+    message = "404 Role Not Found"
+
+
+class BadRequest(ApplicationException):
+    status_code = 404
+    message = "Bad Request"
