@@ -71,6 +71,10 @@ class Config:
     USER_ROLE_NAME = 'user'
     ADMIN_ROLE_NAME = 'admin'
 
+    # PAGINATION
+    DEFAULT_PAGE_START = 1
+    DEFAULT_PAGE_COUNT = 20
+
 
 class DevelopConfig(Config):
     DEBUG = True

@@ -263,8 +263,10 @@ def get(id):
 def list():
     log_action = 'LIST_MEMBER'
     try:
+        page_number = int(request.json.get('page', Config.DEFAULT_PAGE_START))
+        per_page = int(request.json.get('per_page', Config.DEFAULT_PAGE_COUNT))
         member = Member.current_member()
-        members = Member.query.filter_by(removed_at=None).all()
+        members = Member.query.filter_by(removed_at=None).all().order_by(Member.created_at.desc())
     
     except Exception as e:
         application_error_logger(
@@ -281,4 +283,7 @@ def list():
         action=log_action,
         username=member.email
     )
-    return jsonify(MemberSchema(many=True).dump(members)), 200
+    pagination = members.paginate(page_number, per_page, False)
+    schema = MemberSchema(many=True)
+    items = schema.dump(pagination.items).data
+    return jsonify(items=items, total=pagination.total), 200
